@@ -38,29 +38,45 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
 
 .rd-up { position: relative; border-radius: calc(var(--cds-radius) * 2); padding: var(--cds-pad-lg); margin-bottom: var(--cds-gap-md);
   background: linear-gradient(120deg, rgba(59,130,246,.10), rgba(246,217,91,.22)); border: 1px solid var(--color-border-line); }
+.rd-up-head { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--cds-gap-md); flex-wrap: wrap; }
 .rd-up h2 { margin: 0 0 4px; font-family: var(--font-anthropic-serif); font-weight: 400; font-size: calc(var(--cds-font-size-title) * .8); }
-.rd-up-btns { display: flex; flex-wrap: wrap; gap: var(--cds-gap-sm); margin-top: var(--cds-gap-sm); }
-.rd-up-btn { font: inherit; font-weight: 700; font-size: var(--cds-font-size-body); padding: 12px 20px; border-radius: 999px; border: 2px solid transparent; cursor: pointer; box-shadow: 0 4px 14px -6px rgba(0,0,0,.35); transition: transform .15s; }
+.rd-refresh { font: inherit; font-weight: 700; font-size: var(--cds-font-size-caption); padding: 8px 16px; border-radius: 999px; border: 1px solid var(--color-border-line); background: var(--color-panel); color: var(--color-fg); cursor: pointer; }
+.rd-refresh:hover { background: #1b2a4a; color: #fff; }
+.rd-step { font-size: 11px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--color-fg-muted); margin: var(--cds-gap-md) 0 6px; }
+.rd-up-btns { display: flex; flex-wrap: wrap; gap: var(--cds-gap-sm); }
+.rd-up-btn { font: inherit; font-weight: 700; font-size: var(--cds-font-size-body); padding: 11px 20px; border-radius: 999px; border: 2px solid transparent; cursor: pointer; box-shadow: 0 4px 14px -6px rgba(0,0,0,.35); transition: transform .15s; }
 .rd-up-btn:hover { transform: translateY(-2px); }
 .rd-up-btn.r { background: #3b82f6; color: #fff; } .rd-up-btn.d { background: #f6d95b; color: #1b2a4a; border-color: #1b2a4a; }
 .rd-up-btn[aria-pressed="true"] { outline: 3px solid var(--color-fg); outline-offset: 2px; }
+.rd-comp-btn { font: inherit; font-size: var(--cds-font-size-caption); font-weight: 700; padding: 8px 14px; border-radius: 999px; border: 1px solid var(--color-border-line); background: var(--color-panel); color: var(--color-fg); cursor: pointer; }
+.rd-comp-btn[aria-pressed="true"] { background: #1b2a4a; color: #fff; border-color: #1b2a4a; }
+.rd-comp-btn small { font-weight: 400; opacity: .75; margin-left: 4px; }
 .rd-up-panel { margin-top: var(--cds-gap-md); background: var(--color-panel); border-radius: calc(var(--cds-radius) * 1.5); padding: var(--cds-pad-lg); border: 1px solid var(--color-border-line); }
 .rd-up-panel[hidden] { display: none; }
-.rd-up-row { display: flex; flex-wrap: wrap; gap: var(--cds-gap-sm); align-items: center; margin-bottom: var(--cds-gap-sm); font-size: var(--cds-font-size-caption); }
+.rd-up-row { display: flex; flex-wrap: wrap; gap: var(--cds-gap-sm); align-items: center; font-size: var(--cds-font-size-caption); }
 .rd-up-row select, .rd-up-row input[type=text] { font: inherit; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--color-border-line); background: var(--color-bg); color: var(--color-fg); }
 .rd-up-row input[type=text] { flex: 1; min-width: 12rem; }
-.rd-drop { border: 2px dashed var(--color-border-line); border-radius: calc(var(--cds-radius) * 1.5); padding: 28px 16px; text-align: center; cursor: pointer; color: var(--color-fg-muted); transition: background .15s, border-color .15s; }
+.rd-drop { border: 2px dashed var(--color-border-line); border-radius: calc(var(--cds-radius) * 1.5); padding: 26px 16px; text-align: center; cursor: pointer; color: var(--color-fg-muted); transition: background .15s, border-color .15s; margin-top: var(--cds-gap-sm); }
 .rd-drop.over { background: rgba(59,130,246,.08); border-color: #3b82f6; }
 .rd-drop b { color: var(--color-fg); }
 .rd-thumbs { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 10px; margin-top: var(--cds-gap-sm); }
-.rd-thumb { position: relative; border-radius: var(--cds-radius); overflow: hidden; border: 1px solid var(--color-border-line); background: var(--cds-chart-grid); aspect-ratio: 3 / 4; }
+.rd-thumb { position: relative; border-radius: var(--cds-radius); overflow: hidden; border: 1px solid var(--color-border-line); background: var(--cds-chart-grid); aspect-ratio: 3 / 4; display: block; }
 .rd-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .rd-thumb span { position: absolute; left: 6px; bottom: 6px; right: 6px; font-size: 11px; font-weight: 700; padding: 2px 6px; border-radius: 999px; background: rgba(27,42,74,.85); color: #fff; text-align: center; }
 .rd-thumb span.ok { background: #16a34a; } .rd-thumb span.err { background: #dc2626; }
+.rd-thumb span.r { background: #3b82f6; } .rd-thumb span.d { background: #f6d95b; color: #1b2a4a; }
 .rd-up-go { font: inherit; font-weight: 700; padding: 10px 22px; border-radius: 999px; border: 0; background: #1b2a4a; color: #fff; cursor: pointer; margin-top: var(--cds-gap-sm); }
 .rd-up-go:disabled { opacity: .45; cursor: default; }
 .rd-up-msg { margin: var(--cds-gap-sm) 0 0; font-size: var(--cds-font-size-caption); }
 .rd-up-off { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); margin: 6px 0 0; }
+.rd-stat { width: 100%; border-collapse: collapse; font-size: var(--cds-font-size-caption); margin-top: 6px; }
+.rd-stat th, .rd-stat td { text-align: left; padding: 7px 8px; border-bottom: 1px solid var(--color-border-line); }
+.rd-stat th { color: var(--color-fg-muted); font-weight: 700; }
+.rd-stat td.in-r { color: #3b82f6; font-weight: 700; } .rd-stat td.in-d { color: #a16207; font-weight: 700; } .rd-stat td.no { color: var(--color-fg-muted); }
+.rd-stat .lock { font-weight: 700; }
+.rd-gallery { margin-top: var(--cds-gap-sm); }
+.rd-gallery h4 { margin: var(--cds-gap-sm) 0 4px; font-size: var(--cds-font-size-caption); }
+@media (prefers-color-scheme: dark) { .rd-stat td.in-d { color: #facc15; } }
 </style>
 </head>
 <body>
@@ -264,6 +280,12 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
 .rd-out-chip.won { background: var(--rd-win); box-shadow: 0 0 0 3px rgba(22,163,74,.25); } .rd-out-chip.lost { background: var(--rd-loss); }
 .rd-out-empty { border: 2px dashed var(--color-border-line); border-radius: calc(var(--cds-radius) * 1.5); padding: var(--cds-pad-md); color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); text-align: center; }
 
+/* ---------- sealed note ---------- */
+.rd-sealed { border-radius: calc(var(--cds-radius) * 1.5); padding: var(--cds-pad-md) var(--cds-pad-lg); background: var(--color-panel); border: 1px dashed var(--rd-navy); }
+.rd-sealed[hidden] { display: none; }
+.rd-sealed b { font-weight: var(--cds-font-weight-medium); }
+.rd-sealed ul { margin: 6px 0 0; padding-left: 1.2em; font-size: var(--cds-font-size-caption); }
+
 /* ---------- controls ---------- */
 .rd-filters { display: flex; flex-wrap: wrap; gap: var(--cds-gap-sm); margin-bottom: var(--cds-gap-sm); align-items: center; }
 .rd-filters select, .rd-filters input, .rd-seg button { font: inherit; font-size: var(--cds-font-size-caption); padding: 6px 12px; border: 1px solid var(--color-border-line); border-radius: 999px; background: var(--color-bg); color: var(--color-fg); }
@@ -291,17 +313,27 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
     <p class="rd-sub">Roscoe bets in euros, Dom in pounds, each with his own sportsbook. Every Premier League, Champions League and Nations League game, a weekly combo and five outrights each.</p>
 
   
-<section class="rd-up" id="upload" aria-label="Upload bet slips">
-  <h2>📸 Upload bet slips</h2>
-  <p class="rd-note" style="margin:0">Pick who you are, then drop in this week’s screenshots. Claude reads them and adds the bets the next morning.</p>
+<section class="rd-up" id="upload" aria-label="Bet slips">
+  <div class="rd-up-head">
+    <div><h2>📸 Bet slips</h2>
+      <p class="rd-note" style="margin:0">Upload each league’s screenshots separately. Each league stays 🔒 sealed until you’ve both uploaded to it — nobody sees the other’s slips or picks before that.</p></div>
+    <button type="button" class="rd-refresh" id="rd-refresh" title="Fetch the latest version of this page">🔄 Refresh</button>
+  </div>
+  <div class="rd-step">1 · Who are you?</div>
   <div class="rd-up-btns">
     <button type="button" class="rd-up-btn r" data-player="Roscoe" aria-pressed="false">Roscoe’s upload</button>
     <button type="button" class="rd-up-btn d" data-player="Dom" aria-pressed="false">Dom’s upload</button>
   </div>
   <p class="rd-up-off" id="up-off" hidden>Uploads switch on soon.</p>
+  <div class="rd-step">2 · Which week?</div>
+  <div class="rd-up-row"><select id="up-week" aria-label="Week"></select><span class="rd-up-off" id="up-status-time" style="margin:0"></span></div>
+  <table class="rd-stat" id="up-status" aria-label="Who has uploaded"><thead><tr><th>League</th><th>Roscoe</th><th>Dom</th><th></th></tr></thead><tbody></tbody></table>
+  <div class="rd-gallery" id="up-gallery"></div>
   <div class="rd-up-panel" id="up-panel" hidden>
-    <div class="rd-up-row"><b id="up-who">—</b><label for="up-week">for</label><select id="up-week"></select>
-      <input type="text" id="up-note" maxlength="120" placeholder="Optional note, e.g. “combo is the 3rd screenshot”"></div>
+    <div class="rd-step" style="margin-top:0">3 · Which league are these screenshots for?</div>
+    <div class="rd-up-btns" id="up-comps"></div>
+    <div class="rd-up-row" style="margin-top:var(--cds-gap-sm)"><b id="up-who">—</b>
+      <input type="text" id="up-note" maxlength="120" placeholder="Optional note, e.g. “last screenshot is the combo”"></div>
     <div class="rd-drop" id="up-drop" tabindex="0" role="button" aria-label="Choose screenshots"><b>Tap to choose screenshots</b><br>or drag them here · several at once is fine</div>
     <input type="file" id="up-file" accept="image/*" multiple hidden>
     <div class="rd-thumbs" id="up-thumbs"></div>
@@ -328,6 +360,7 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
   </nav>
 
   <section class="rd-page" id="overview">
+    <div class="rd-sealed" data-source="sealed" id="sealed-note" hidden></div>
     <div class="rd-card" id="scoreboard">
       <h3>Scoreboard</h3>
       <p class="rd-note">The same bets scored six different ways. Each method has its own tab with the detail.</p>
@@ -796,7 +829,7 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
 </script>
 <script>dash.calc('settled', {
   title: 'Every bet, settled',
-  description: 'Each bet with its result, return and profit under every comparison method (units, fixed rate, weekly rate, level odds).',
+  description: 'Each bet with its result, return and profit under every comparison method (units, fixed rate, weekly rate, level odds). Bets stay sealed (left out everywhere) until both players have bets in the same group: one week of one league, one week\u2019s combo, or the outrights.',
   inputs: ['bets', 'fixtures', 'weeks', 'settings'],
   fn: (bets, fixtures, weeks, settings) => {
     const n = (v) => (v === '' || v == null ? null : Number(v));
@@ -810,7 +843,12 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
       const h = n(f.home_goals), a = n(f.away_goals);
       return h > a ? 'H' : h < a ? 'A' : 'D';
     };
-    const rows = bets.filter((b) => b.player === 'Roscoe' || b.player === 'Dom').map((b) => {
+    const real = bets.filter((b) => b.player === 'Roscoe' || b.player === 'Dom');
+    const gk = (b) => (b.type === 'Outright' ? 'Outright' : `${Number(b.week)}|${b.type}`);
+    const who = new Map();
+    for (const b of real) { if (!who.has(gk(b))) who.set(gk(b), new Set()); who.get(gk(b)).add(b.player); }
+    const open = (b) => who.get(gk(b)).size === 2;  // sealed until both players have bets in the group
+    const rows = real.filter(open).map((b) => {
       const f = fx.get(b.fixture_id);
       const res = result(f);
       const pick = b.pick || null;
@@ -1092,6 +1130,12 @@ dash.calc('tables', {
   inputs: ['epl_base', 'fixtures', 'bets'],
   fn: (epl_base, fixtures, bets) => {
     const n = (v) => (v === '' || v == null ? null : Number(v));
+    const real = bets.filter((b) => b.player === 'Roscoe' || b.player === 'Dom');
+    const gk = (b) => (b.type === 'Outright' ? 'Outright' : `${Number(b.week)}|${b.type}`);
+    const who = new Map();
+    for (const b of real) { if (!who.has(gk(b))) who.set(gk(b), new Set()); who.get(gk(b)).add(b.player); }
+    const openB = (b) => who.get(gk(b)).size === 2;  // sealed until both players have bets in the group
+    bets = real.filter(openB);
     const out = [];
     const resOf = (f) => (n(f.home_goals) == null ? null : n(f.home_goals) > n(f.away_goals) ? 'H' : n(f.home_goals) < n(f.away_goals) ? 'A' : 'D');
     const blank = () => ({ p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, pts: 0 });
@@ -1441,7 +1485,7 @@ dash.calc('outrights', {
   description: 'Each outright bet with its price, potential return, result and its latest live status (refreshed weekly).',
   inputs: ['bets', 'settled', 'outright_live'],
   fn: (bets, settled, outright_live) => bets
-    .filter((b) => b.type === 'Outright' && (b.player === 'Roscoe' || b.player === 'Dom'))
+    .filter((b) => b.type === 'Outright' && settled.some((r) => r.bet_id === b.bet_id))
     .map((b) => {
       const s = settled.find((r) => r.bet_id === b.bet_id) || {};
       const live = outright_live.find((l) => l.bet_id === b.bet_id) || {};
@@ -1453,6 +1497,26 @@ dash.calc('outrights', {
       };
     })
     .sort((a, b) => a.player.localeCompare(b.player) || String(a.bet_id).localeCompare(String(b.bet_id))),
+});
+
+
+dash.calc('sealed', {
+  title: 'Sealed picks',
+  description: 'Groups (one week of one league, a week\u2019s combo, or the outrights) where only one player\u2019s bets are in so far. Their picks stay hidden until the other player\u2019s are in too.',
+  inputs: ['bets', 'weeks'],
+  fn: (bets, weeks) => {
+    const real = bets.filter((b) => b.player === 'Roscoe' || b.player === 'Dom');
+    const gk = (b) => (b.type === 'Outright' ? 'Outright' : `${Number(b.week)}|${b.type}`);
+    const who = new Map();
+    for (const b of real) { if (!who.has(gk(b))) who.set(gk(b), new Set()); who.get(gk(b)).add(b.player); }
+    const names = { EPL: 'Premier League', UCL: 'Champions League', UNL: 'Nations League', Combo: 'Combo', Outright: 'Outrights' };
+    return [...who].filter(([, s]) => s.size === 1).map(([k, s]) => {
+      const [wk, type] = k === 'Outright' ? [null, 'Outright'] : k.split('|');
+      const w = weeks.find((x) => String(x.week) === String(wk));
+      const inP = [...s][0];
+      return { key: k, label: `${type === 'Outright' ? 'Season' : (w ? w.label : 'Week ' + wk)} · ${names[type] || type}`, in_player: inP, waiting_for: inP === 'Roscoe' ? 'Dom' : 'Roscoe' };
+    });
+  },
 });
 </script>
 <script>window.__runCalcs();</script>
@@ -1840,6 +1904,21 @@ dash.calc('outrights', {
     }
   }
 
+  function drawSealed(el) {
+    const rows = rowsOf('sealed');
+    el.hidden = !rows.length;
+    if (!rows.length) return;
+    el.replaceChildren();
+    const h = document.createElement('b'); h.textContent = '🔒 Sealed until both slips are in';
+    const ul = document.createElement('ul');
+    for (const r of rows) {
+      const li = document.createElement('li');
+      li.textContent = `${r.label}: ${r.in_player}’s picks are in, waiting for ${r.waiting_for}`;
+      ul.appendChild(li);
+    }
+    el.append(h, ul);
+  }
+
   function drawForm(el) {
     const st = D('form').status;
     if (st === 'loading') return;
@@ -2057,7 +2136,7 @@ dash.calc('outrights', {
     });
     if (sec.id === 'outrights') drawOutrights(document.getElementById('outrights-viz'));
     if (sec.id === 'picks') drawAgree(document.getElementById('agree-viz'));
-    if (sec.id === 'overview') drawForm(document.getElementById('form-viz'));
+    if (sec.id === 'overview') { drawForm(document.getElementById('form-viz')); drawSealed(document.getElementById('sealed-note')); }
     if (sec.id === 'trophies') { drawTitles(document.getElementById('titles-viz')); drawForecast(document.getElementById('forecast-viz')); }
     if (sec.id === 'odds') { drawBookie(document.getElementById('bookie-chart')); drawSwap(document.getElementById('swap-text')); }
   }
@@ -2174,15 +2253,23 @@ dash.calc('outrights', {
 </script>
 <script>
 (() => {
-  const CFG = {"cloud": "u3p1wuu7", "preset": "rvd_slips", "tag": "rvd-slip"};
+  const CFG = {"cloud": "u3p1wuu7", "preset": "rvd_slips", "tag": "rvd-slip", "status": "https://res.cloudinary.com/u3p1wuu7/raw/upload/rvd/status.json"};
   const box = document.getElementById('upload'); if (!box) return;
+  const $ = (id) => document.getElementById(id);
+  const NAMES = { EPL: 'Premier League', UCL: 'Champions League', UNL: 'Nations League', Combo: 'Combo', Outright: 'Outrights' };
   const btns = [...box.querySelectorAll('.rd-up-btn')];
-  const panel = document.getElementById('up-panel'), who = document.getElementById('up-who'), weekSel = document.getElementById('up-week');
-  const drop = document.getElementById('up-drop'), input = document.getElementById('up-file'), thumbs = document.getElementById('up-thumbs');
-  const go = document.getElementById('up-go'), msg = document.getElementById('up-msg'), note = document.getElementById('up-note');
-  let player = null, files = [];
+  const panel = $('up-panel'), who = $('up-who'), weekSel = $('up-week'), comps = $('up-comps');
+  const drop = $('up-drop'), input = $('up-file'), thumbs = $('up-thumbs'), go = $('up-go'), msg = $('up-msg'), note = $('up-note');
+  let player = null, comp = null, files = [], status = null;
   const ready = !!(CFG.cloud && CFG.preset);
-  // weeks that have games; default = the first one with a game still to kick off
+
+  // Refresh: reload this page past any cache, keeping where you were
+  $('rd-refresh').addEventListener('click', () => {
+    const u = new URL(location.href); u.searchParams.set('r', Date.now());
+    location.replace(u.toString());
+  });
+
+  // weeks with games; default = the first one with a game still to come (or played in the last 3 days)
   const weeks = (dash.data('weeks').data || []).slice().sort((a, b) => a.week - b.week);
   const fx = dash.data('fixtures').data || [];
   const withGames = weeks.filter((w) => fx.some((f) => Number(f.week) === Number(w.week)));
@@ -2191,20 +2278,81 @@ dash.calc('outrights', {
   const rounds = (w) => [w.epl_round, w.ucl_round, w.unl_round ? 'UNL ' + w.unl_round : null].filter(Boolean).join(' + ');
   (withGames.length ? withGames : weeks).forEach((w) => weekSel.appendChild(new Option(`${w.label} · ${rounds(w)}`, w.week)));
   if (upcoming) weekSel.value = String(upcoming.week);
-  if (!ready) document.getElementById('up-off').hidden = false;
+  if (!ready) $('up-off').hidden = false;
+
+  const weekComps = () => {
+    const w = weeks.find((x) => String(x.week) === weekSel.value) || {};
+    const list = [];
+    const has = (c) => fx.some((f) => Number(f.week) === Number(w.week) && f.comp === c);
+    if (w.epl_round || has('EPL')) list.push(['EPL', w.epl_round]);
+    if (w.ucl_round || has('UCL')) list.push(['UCL', w.ucl_round]);
+    if (w.unl_round || has('UNL')) list.push(['UNL', w.unl_round]);
+    list.push(['Combo', null], ['Outright', 'season']);
+    return list;
+  };
+  const groupOf = (c) => (status ? status.groups.find((g) => g.comp === c && (c === 'Outright' ? true : String(g.week) === weekSel.value)) : null);
+
+  function drawStatus() {
+    const tb = $('up-status').tBodies[0]; tb.replaceChildren();
+    const gal = $('up-gallery'); gal.replaceChildren();
+    for (const [c, r] of weekComps()) {
+      const g = groupOf(c);
+      const tr = document.createElement('tr');
+      const td = (t, cls) => { const x = document.createElement('td'); x.textContent = t; if (cls) x.className = cls; return x; };
+      tr.append(td(NAMES[c] + (r && r !== 'season' ? ` (${r})` : '')),
+        td(g && g.roscoe ? '✓ in' : '—', g && g.roscoe ? 'in-r' : 'no'),
+        td(g && g.dom ? '✓ in' : '—', g && g.dom ? 'in-d' : 'no'),
+        td(!status ? '' : g && g.open ? '🔓 open' : g && (g.roscoe || g.dom) ? '🔒 sealed' : '', 'lock'));
+      tb.appendChild(tr);
+      if (g && g.open && g.images && g.images.length) {
+        const h = document.createElement('h4'); h.textContent = `🔓 ${NAMES[c]} slips`;
+        const grid = document.createElement('div'); grid.className = 'rd-thumbs';
+        for (const im of g.images) {
+          const a = document.createElement('a'); a.className = 'rd-thumb'; a.href = im.full; a.target = '_blank'; a.rel = 'noopener';
+          const img = document.createElement('img'); img.src = im.thumb; img.alt = `${im.player}’s slip`; img.loading = 'lazy';
+          const s = document.createElement('span'); s.textContent = im.player; s.className = im.player === 'Roscoe' ? 'r' : 'd';
+          a.append(img, s); grid.appendChild(a);
+        }
+        gal.append(h, grid);
+      }
+    }
+    $('up-status-time').textContent = !CFG.status ? '' : status ? (status.updated_at ? `Upload list checked ${new Date(status.updated_at).toLocaleString([], { weekday: 'short', hour: '2-digit', minute: '2-digit' })} · new uploads show within ~15 min` : '') : 'Upload list unavailable right now';
+  }
+  async function loadStatus() {
+    if (!CFG.status) return drawStatus();
+    try {
+      const r = await fetch(CFG.status + '?t=' + Date.now(), { cache: 'no-store' });
+      status = r.ok ? await r.json() : { groups: [] };
+      if (!status.groups) status.groups = [];
+    } catch (e) { status = null; }
+    drawStatus();
+  }
+  function drawComps() {
+    comps.replaceChildren();
+    for (const [c, r] of weekComps()) {
+      const b = document.createElement('button'); b.type = 'button'; b.className = 'rd-comp-btn'; b.dataset.comp = c;
+      b.textContent = NAMES[c]; if (r) { const sm = document.createElement('small'); sm.textContent = r === 'season' ? 'season' : r; b.appendChild(sm); }
+      b.setAttribute('aria-pressed', String(c === comp));
+      b.addEventListener('click', () => { comp = c; drawComps(); syncGo(); });
+      comps.appendChild(b);
+    }
+    if (comp && !weekComps().some(([c]) => c === comp)) comp = null;
+  }
+  weekSel.addEventListener('change', () => { drawStatus(); drawComps(); syncGo(); });
   btns.forEach((b) => b.addEventListener('click', () => {
     if (!ready) return;
     player = b.dataset.player;
     btns.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
     who.textContent = `${player}’s slips`;
     who.style.color = player === 'Roscoe' ? '#3b82f6' : '#a16207';
-    panel.hidden = false; msg.textContent = '';
+    panel.hidden = false; msg.textContent = ''; drawComps(); syncGo();
   }));
   const add = (list) => {
     for (const f of list) if (f.type.startsWith('image/') || /\.(heic|heif)$/i.test(f.name)) files.push({ f, state: 'ready' });
-    draw();
+    drawThumbs();
   };
-  function draw() {
+  function syncGo() { go.disabled = !comp || !files.some((it) => it.state === 'ready' || it.state === 'error'); go.textContent = comp ? `Upload to ${NAMES[comp]}` : 'Pick a league first'; }
+  function drawThumbs() {
     thumbs.replaceChildren();
     files.forEach((it) => {
       const d = document.createElement('div'); d.className = 'rd-thumb';
@@ -2215,7 +2363,7 @@ dash.calc('outrights', {
       if (it.state === 'done') s.className = 'ok'; if (it.state === 'error') s.className = 'err';
       d.append(img, s); thumbs.appendChild(d);
     });
-    go.disabled = !files.some((it) => it.state === 'ready' || it.state === 'error');
+    syncGo();
   }
   drop.addEventListener('click', () => input.click());
   drop.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); input.click(); } });
@@ -2224,29 +2372,32 @@ dash.calc('outrights', {
   ['dragleave', 'drop'].forEach((ev) => drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.remove('over'); }));
   drop.addEventListener('drop', (e) => add(e.dataTransfer.files));
   go.addEventListener('click', async () => {
-    if (!player) return;
-    go.disabled = true; msg.textContent = 'Uploading…';
+    if (!player || !comp) return;
+    go.disabled = true; msg.textContent = 'Uploading…'; msg.style.color = '';
     const wk = weekSel.value, clean = (t) => String(t).replace(/[|=]/g, ' ').trim();
     let ok = 0, bad = 0;
     for (const it of files) {
       if (it.state === 'done') continue;
-      it.state = 'sending'; draw();
+      it.state = 'sending'; drawThumbs();
       const fd = new FormData();
       fd.append('file', it.f);
       fd.append('upload_preset', CFG.preset);
-      fd.append('tags', `${CFG.tag},player-${player.toLowerCase()},week-${wk}`);
-      fd.append('context', `player=${player}|week=${wk}` + (note.value.trim() ? `|note=${clean(note.value)}` : ''));
+      fd.append('tags', `${CFG.tag},player-${player.toLowerCase()},week-${wk},comp-${comp.toLowerCase()}`);
+      fd.append('context', `player=${player}|week=${wk}|comp=${comp}` + (note.value.trim() ? `|note=${clean(note.value)}` : ''));
       try {
         const r = await fetch(`https://api.cloudinary.com/v1_1/${CFG.cloud}/image/upload`, { method: 'POST', body: fd });
         const j = await r.json();
         if (!r.ok || j.error) throw new Error(j.error ? j.error.message : r.statusText);
         it.state = 'done'; it.url = j.secure_url; ok++;
       } catch (e) { it.state = 'error'; bad++; console.warn(e); }
-      draw();
+      drawThumbs();
     }
-    msg.textContent = bad ? `${ok} uploaded, ${bad} failed — tap Upload to retry the failed ones.` : `✓ ${ok} screenshot${ok === 1 ? '' : 's'} uploaded for ${player}, week ${wk}. Claude adds them the next morning.`;
+    msg.textContent = bad ? `${ok} uploaded, ${bad} failed — tap Upload to retry the failed ones.`
+      : `✓ ${ok} screenshot${ok === 1 ? '' : 's'} uploaded: ${player} · ${NAMES[comp]} · week ${wk}. It shows as “✓ in” above within ~15 min (tap 🔄 Refresh).`;
     msg.style.color = bad ? '#dc2626' : '#16a34a';
+    if (!bad) { files = []; setTimeout(drawThumbs, 2500); }
   });
+  drawStatus(); loadStatus();
 })();
 </script>
 </body>
