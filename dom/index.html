@@ -338,7 +338,7 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
 <section class="rd-up" id="upload" aria-label="Bet slips">
   <div class="rd-up-head">
     <div><h2>📸 Bet slips</h2>
-      <p class="rd-note" style="margin:0">Upload each league’s screenshots separately. Each league stays 🔒 sealed until you’ve both uploaded to it — nobody sees the other’s slips or picks before that.</p></div>
+      <p class="rd-note" style="margin:0">Each league has its own upload: Premier League, Champions League and Nations League slips go in separately, round by round. Each one stays 🔒 sealed until you’ve both uploaded to it — nobody sees the other’s slips or picks before that.</p></div>
     <button type="button" class="rd-refresh" id="rd-refresh" title="Fetch the latest version of this page">🔄 Refresh</button>
   </div>
   <div class="rd-step" id="up-step1">1 · Who are you?</div>
@@ -347,21 +347,25 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
     <button type="button" class="rd-up-btn d" data-player="Dom" aria-pressed="false">Dom’s upload</button>
   </div>
   <p class="rd-up-off" id="up-off" hidden>Uploads switch on soon.</p>
-  <div class="rd-step">2 · Which week?</div>
-  <div class="rd-up-row"><select id="up-week" aria-label="Week"></select><span class="rd-up-off" id="up-status-time" style="margin:0"></span></div>
-  <table class="rd-stat" id="up-status" aria-label="Who has uploaded"><thead><tr><th>League</th><th>Roscoe</th><th>Dom</th><th></th></tr></thead><tbody></tbody></table>
-  <div class="rd-gallery" id="up-gallery"></div>
   <div class="rd-up-panel" id="up-panel" hidden>
-    <div class="rd-step" style="margin-top:0">3 · Which league are these screenshots for?</div>
+    <div class="rd-step" style="margin-top:0">2 · Which league?</div>
     <div class="rd-up-btns" id="up-comps"></div>
-    <div class="rd-up-row" style="margin-top:var(--cds-gap-sm)"><b id="up-who">—</b>
-      <input type="text" id="up-note" maxlength="120" placeholder="Optional note, e.g. “last screenshot is the combo”"></div>
+    <div id="up-round-wrap" hidden>
+      <div class="rd-step">3 · Which round?</div>
+      <div class="rd-up-row"><select id="up-round" aria-label="Round"></select></div>
+    </div>
+    <div class="rd-step" id="up-step-files">4 · Your screenshots</div>
+    <div class="rd-up-row"><b id="up-who">—</b>
+      <input type="text" id="up-note" maxlength="120" placeholder="Optional note"></div>
     <div class="rd-drop" id="up-drop" tabindex="0" role="button" aria-label="Choose screenshots"><b>Tap to choose screenshots</b><br>or drag them here · several at once is fine</div>
     <input type="file" id="up-file" accept="image/*" multiple hidden>
     <div class="rd-thumbs" id="up-thumbs"></div>
     <button type="button" class="rd-up-go" id="up-go" disabled>Upload</button>
     <p class="rd-up-msg" id="up-msg"></p>
   </div>
+  <div class="rd-step">Who has uploaded <span class="rd-up-off" id="up-status-time" style="margin:0 0 0 6px;text-transform:none;letter-spacing:0;font-weight:400"></span></div>
+  <table class="rd-stat" id="up-status" aria-label="Who has uploaded"><thead><tr><th>Upload</th><th>Roscoe</th><th>Dom</th><th></th></tr></thead><tbody></tbody></table>
+  <div class="rd-gallery" id="up-gallery"></div>
 </section>
 
   <nav class="rd-tabs" role="tablist" aria-label="Views">
@@ -2377,12 +2381,16 @@ dash.calc('sealed', {
   const CFG = {"cloud": "u3p1wuu7", "preset": "rvd_slips", "tag": "rvd-slip", "status": "https://res.cloudinary.com/u3p1wuu7/raw/upload/rvd/status.json"};
   const box = document.getElementById('upload'); if (!box) return;
   const $ = (id) => document.getElementById(id);
-  const NAMES = { EPL: 'Premier League', UCL: 'Champions League', UNL: 'Nations League', Combo: 'Combo', Outright: 'Outrights' };
+  const COMPS = [
+    ['EPL', '⚽ Premier League'], ['UCL', '⭐ Champions League'], ['UNL', '🌍 Nations League'], ['Combo', '🎰 Combo'], ['Outright', '🔮 Outrights'],
+  ];
+  const NAME = Object.fromEntries(COMPS.map(([c, n]) => [c, n.replace(/^\S+\s/, '')]));
   const btns = [...box.querySelectorAll('.rd-up-btn')];
-  const panel = $('up-panel'), who = $('up-who'), weekSel = $('up-week'), comps = $('up-comps');
+  const panel = $('up-panel'), who = $('up-who'), comps = $('up-comps'), roundSel = $('up-round'), roundWrap = $('up-round-wrap');
   const drop = $('up-drop'), input = $('up-file'), thumbs = $('up-thumbs'), go = $('up-go'), msg = $('up-msg'), note = $('up-note');
   let player = null, comp = null, files = [], status = null;
   const ready = !!(CFG.cloud && CFG.preset);
+  const chosenRound = {};  // comp -> week number picked in the round list
 
   // Refresh: reload this page past any cache, keeping where you were
   $('rd-refresh').addEventListener('click', () => {
@@ -2390,43 +2398,61 @@ dash.calc('sealed', {
     location.replace(u.toString());
   });
 
-  // weeks with games; default = the first one with a game still to come (or played in the last 3 days)
   const weeks = (dash.data('weeks').data || []).slice().sort((a, b) => a.week - b.week);
   const fx = dash.data('fixtures').data || [];
-  const withGames = weeks.filter((w) => fx.some((f) => Number(f.week) === Number(w.week)));
   const now = Date.now();
-  const upcoming = withGames.find((w) => fx.some((f) => Number(f.week) === Number(w.week) && new Date(f.kickoff).getTime() > now - 3 * 864e5)) || withGames.at(-1) || weeks.at(-1);
-  const rounds = (w) => [w.epl_round, w.ucl_round, w.unl_round ? 'UNL ' + w.unl_round : null].filter(Boolean).join(' + ');
-  (withGames.length ? withGames : weeks).forEach((w) => weekSel.appendChild(new Option(`${w.label} · ${rounds(w)}`, w.week)));
-  if (upcoming) weekSel.value = String(upcoming.week);
-  if (!ready) $('up-off').hidden = false;
-
-  const weekComps = () => {
-    const w = weeks.find((x) => String(x.week) === weekSel.value) || {};
-    const list = [];
-    const has = (c) => fx.some((f) => Number(f.week) === Number(w.week) && f.comp === c);
-    if (w.epl_round || has('EPL')) list.push(['EPL', w.epl_round]);
-    if (w.ucl_round || has('UCL')) list.push(['UCL', w.ucl_round]);
-    if (w.unl_round || has('UNL')) list.push(['UNL', w.unl_round]);
-    list.push(['Combo', null], ['Outright', 'season']);
-    return list;
+  const dfmt = (d) => new Date(d).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', timeZone: 'Europe/Sofia' });
+  const span = (list) => {
+    if (!list.length) return '';
+    const t = list.map((f) => new Date(f.kickoff).getTime()).sort((a, b) => a - b);
+    const a = dfmt(t[0]), b = dfmt(t[t.length - 1]);
+    return a === b ? a : `${a} – ${b}`;
   };
-  const groupOf = (c) => (status ? status.groups.find((g) => g.comp === c && (c === 'Outright' ? true : String(g.week) === weekSel.value)) : null);
+  // The rounds you can upload to, per league. Each round belongs to one competition week (that's what gets stored).
+  function roundsFor(c) {
+    if (c === 'Outright') return [];
+    const out = [];
+    for (const w of weeks) {
+      const wk = Number(w.week);
+      if (wk < 1) continue;
+      const games = fx.filter((f) => Number(f.week) === wk && (c === 'Combo' || f.comp === c));
+      const tag = c === 'EPL' ? w.epl_round : c === 'UCL' ? w.ucl_round : c === 'UNL' ? (w.unl_round ? `MD${String(w.unl_round).replace(/^MD/, '')}` : null) : w.label;
+      if (!tag && !games.length) continue;
+      if (c === 'Combo' && !games.length) continue;
+      const rounds = [w.epl_round, w.ucl_round, w.unl_round ? 'UNL ' + w.unl_round : null].filter(Boolean).join(' + ');
+      out.push({ week: wk, tag: tag || w.label, label: c === 'Combo' ? `${w.label} (${rounds})` : `${tag || w.label}${games.length ? ' · ' + span(games) : ''}`,
+        live: games.some((f) => new Date(f.kickoff).getTime() > now - 3 * 864e5), games: games.length });
+    }
+    return out;
+  }
+  const defaultRound = (c) => { const r = roundsFor(c); return (r.find((x) => x.live) || r.at(-1) || {}).week; };
+  const roundOf = (c) => (c in chosenRound ? chosenRound[c] : defaultRound(c));
+  // Outrights are one group for the season; they're filed under the current week
+  const currentWeek = () => defaultRound('Combo') || (weeks.find((w) => Number(w.week) >= 1) || {}).week || 1;
+  const uploadWeek = (c) => (c === 'Outright' ? currentWeek() : roundOf(c));
+  const tagOf = (c) => (roundsFor(c).find((r) => r.week === roundOf(c)) || {}).tag || '';
 
+  if (!ready) $('up-off').hidden = false;
+  const groupOf = (c, wk) => (status ? status.groups.find((g) => g.comp === c && (c === 'Outright' || String(g.week) === String(wk))) : null);
+
+  // Status: one row per league, at the round currently picked for it (or its next round)
   function drawStatus() {
     const tb = $('up-status').tBodies[0]; tb.replaceChildren();
     const gal = $('up-gallery'); gal.replaceChildren();
-    for (const [c, r] of weekComps()) {
-      const g = groupOf(c);
+    for (const [c] of COMPS) {
+      if (c !== 'Outright' && !roundsFor(c).length) continue;
+      const wk = uploadWeek(c), g = groupOf(c, wk);
+      const label = NAME[c] + (c === 'Outright' ? ' (season)' : c === 'Combo' ? ` (Week ${wk})` : ` (${tagOf(c)})`);
       const tr = document.createElement('tr');
       const td = (t, cls) => { const x = document.createElement('td'); x.textContent = t; if (cls) x.className = cls; return x; };
-      tr.append(td(NAMES[c] + (r && r !== 'season' ? ` (${r})` : '')),
+      tr.append(td(label),
         td(g && g.roscoe ? '✓ in' : '—', g && g.roscoe ? 'in-r' : 'no'),
         td(g && g.dom ? '✓ in' : '—', g && g.dom ? 'in-d' : 'no'),
         td(!status ? '' : g && g.open ? '🔓 open' : g && (g.roscoe || g.dom) ? '🔒 sealed' : '', 'lock'));
+      if (c === comp) tr.style.fontWeight = '700';
       tb.appendChild(tr);
       if (g && g.open && g.images && g.images.length) {
-        const h = document.createElement('h4'); h.textContent = `🔓 ${NAMES[c]} slips`;
+        const h = document.createElement('h4'); h.textContent = `🔓 ${label} slips`;
         const grid = document.createElement('div'); grid.className = 'rd-thumbs';
         for (const im of g.images) {
           const a = document.createElement('a'); a.className = 'rd-thumb'; a.href = im.full; a.target = '_blank'; a.rel = 'noopener';
@@ -2437,7 +2463,7 @@ dash.calc('sealed', {
         gal.append(h, grid);
       }
     }
-    $('up-status-time').textContent = !CFG.status ? '' : status ? (status.updated_at ? `Upload list checked ${new Date(status.updated_at).toLocaleString([], { weekday: 'short', hour: '2-digit', minute: '2-digit' })} · new uploads show within ~15 min` : '') : 'Upload list unavailable right now';
+    $('up-status-time').textContent = !CFG.status ? '' : status ? (status.updated_at ? `· checked ${new Date(status.updated_at).toLocaleString([], { weekday: 'short', hour: '2-digit', minute: '2-digit' })} · new uploads show within ~15 min` : '') : '· list unavailable right now';
   }
   async function loadStatus() {
     if (!CFG.status) return drawStatus();
@@ -2450,23 +2476,33 @@ dash.calc('sealed', {
   }
   function drawComps() {
     comps.replaceChildren();
-    for (const [c, r] of weekComps()) {
+    for (const [c, n] of COMPS) {
+      if (c !== 'Outright' && !roundsFor(c).length) continue;
       const b = document.createElement('button'); b.type = 'button'; b.className = 'rd-comp-btn'; b.dataset.comp = c;
-      b.textContent = NAMES[c]; if (r) { const sm = document.createElement('small'); sm.textContent = r === 'season' ? 'season' : r; b.appendChild(sm); }
+      b.textContent = n;
+      const sm = document.createElement('small'); sm.textContent = c === 'Outright' ? 'season' : c === 'Combo' ? `Week ${roundOf(c)}` : tagOf(c);
+      b.appendChild(sm);
       b.setAttribute('aria-pressed', String(c === comp));
-      b.addEventListener('click', () => { comp = c; drawComps(); syncGo(); });
+      b.addEventListener('click', () => { comp = c; drawComps(); drawRounds(); drawStatus(); syncGo(); });
       comps.appendChild(b);
     }
-    if (comp && !weekComps().some(([c]) => c === comp)) comp = null;
   }
-  weekSel.addEventListener('change', () => { drawStatus(); drawComps(); syncGo(); });
+  function drawRounds() {
+    const rs = comp ? roundsFor(comp) : [];
+    roundWrap.hidden = !comp || comp === 'Outright';
+    $('up-step-files').textContent = (!comp || comp === 'Outright' ? '3' : '4') + ' · Your screenshots';
+    roundSel.replaceChildren(...rs.map((r) => new Option(r.label, r.week)));
+    if (rs.length) roundSel.value = String(roundOf(comp));
+    note.placeholder = comp === 'Combo' ? 'Optional note, e.g. “the 3-fold”' : comp === 'Outright' ? 'Optional note, e.g. “Arsenal to win the league”' : 'Optional note';
+  }
+  roundSel.addEventListener('change', () => { chosenRound[comp] = Number(roundSel.value); drawComps(); drawStatus(); syncGo(); });
   btns.forEach((b) => b.addEventListener('click', () => {
     if (!ready) return;
     player = b.dataset.player;
     btns.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
     who.textContent = `${player}’s slips`;
     who.style.color = player === 'Roscoe' ? '#3b82f6' : '#a16207';
-    panel.hidden = false; msg.textContent = ''; drawComps(); syncGo();
+    panel.hidden = false; msg.textContent = ''; drawComps(); drawRounds(); syncGo();
   }));
   // Personal page: uploads always go in as that player
   const ME = window.RD_ME;
@@ -2480,7 +2516,11 @@ dash.calc('sealed', {
     for (const f of list) if (f.type.startsWith('image/') || /\.(heic|heif)$/i.test(f.name)) files.push({ f, state: 'ready' });
     drawThumbs();
   };
-  function syncGo() { go.disabled = !comp || !files.some((it) => it.state === 'ready' || it.state === 'error'); go.textContent = comp ? `Upload to ${NAMES[comp]}` : 'Pick a league first'; }
+  const target = () => (comp === 'Outright' ? 'Outrights' : comp === 'Combo' ? `Combo · Week ${roundOf(comp)}` : `${NAME[comp]} ${tagOf(comp)}`);
+  function syncGo() {
+    go.disabled = !comp || !files.some((it) => it.state === 'ready' || it.state === 'error');
+    go.textContent = comp ? `Upload to ${target()}` : 'Pick a league first';
+  }
   function drawThumbs() {
     thumbs.replaceChildren();
     files.forEach((it) => {
@@ -2503,7 +2543,7 @@ dash.calc('sealed', {
   go.addEventListener('click', async () => {
     if (!player || !comp) return;
     go.disabled = true; msg.textContent = 'Uploading…'; msg.style.color = '';
-    const wk = weekSel.value, clean = (t) => String(t).replace(/[|=]/g, ' ').trim();
+    const wk = uploadWeek(comp), where = target(), clean = (t) => String(t).replace(/[|=]/g, ' ').trim();
     let ok = 0, bad = 0;
     for (const it of files) {
       if (it.state === 'done') continue;
@@ -2522,9 +2562,9 @@ dash.calc('sealed', {
       drawThumbs();
     }
     msg.textContent = bad ? `${ok} uploaded, ${bad} failed — tap Upload to retry the failed ones.`
-      : `✓ ${ok} screenshot${ok === 1 ? '' : 's'} uploaded: ${player} · ${NAMES[comp]} · week ${wk}. It shows as “✓ in” above within ~15 min (tap 🔄 Refresh).`;
+      : `✓ ${ok} screenshot${ok === 1 ? '' : 's'} uploaded: ${player} · ${where}. It shows as “✓ in” below within ~15 min (tap 🔄 Refresh).`;
     msg.style.color = bad ? '#dc2626' : '#16a34a';
-    if (!bad) { files = []; setTimeout(drawThumbs, 2500); }
+    if (!bad) { files = []; note.value = ''; setTimeout(drawThumbs, 2500); }
   });
   drawStatus(); loadStatus();
 })();
