@@ -299,6 +299,34 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
 .rd-rules dt { font-weight: var(--cds-font-weight-medium); }
 .rd-rules dd { margin: 0 0 var(--cds-gap-sm); color: var(--color-fg-muted); }
 @media (max-width: 40rem) { .rd-card { padding: var(--cds-pad-md); } }
+/* ---------- compare picks ---------- */
+.rd-cmp-sum { display: flex; flex-wrap: wrap; gap: var(--cds-gap-sm); }
+.rd-cmp-sum span { font-size: var(--cds-font-size-caption); font-weight: 700; padding: 5px 12px; border-radius: 999px; background: var(--color-panel); border: 1px solid var(--color-border-line); }
+.rd-cmp-sec { display: flex; flex-direction: column; gap: var(--cds-gap-sm); }
+.rd-cmp-sec > h3 { margin: var(--cds-gap-sm) 0 0; font-size: var(--cds-font-size-heading); }
+.rd-cmp-game { background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: calc(var(--cds-radius) * 1.5); padding: var(--cds-pad-md); }
+.rd-cmp-head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--cds-gap-sm); flex-wrap: wrap; margin-bottom: 8px; }
+.rd-cmp-head b { font-size: var(--cds-font-size-body); }
+.rd-cmp-head small { color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); }
+.rd-cmp-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.rd-cmp-pick { border-radius: var(--cds-radius); padding: 8px 10px; min-width: 0; }
+.rd-cmp-pick.r { background: var(--rd-r-tint); border-left: 4px solid var(--rd-r); }
+.rd-cmp-pick.d { background: var(--rd-d-tint); border-left: 4px solid var(--rd-d); }
+.rd-cmp-who { display: block; font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--color-fg-muted); }
+.rd-cmp-sel { display: block; font-weight: 700; font-size: var(--cds-font-size-body); overflow-wrap: anywhere; }
+.rd-cmp-odds { display: block; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); font-variant-numeric: tabular-nums; }
+.rd-cmp-st { font-weight: 700; } .rd-cmp-st.won { color: var(--rd-win); } .rd-cmp-st.lost { color: var(--rd-loss); }
+.rd-cmp-badge { font-size: 12px; font-weight: 700; padding: 2px 10px; border-radius: 999px; white-space: nowrap; }
+.rd-cmp-badge.same { background: rgba(22,163,74,.14); color: var(--rd-win); }
+.rd-cmp-badge.split { background: rgba(139,92,246,.14); color: var(--rd-violet); }
+.rd-cmp-legs { list-style: none; margin: 6px 0 0; padding: 0; font-size: var(--cds-font-size-caption); display: flex; flex-direction: column; gap: 3px; }
+.rd-cmp-legs li { overflow-wrap: anywhere; }
+.rd-cmp-legs li.both { font-weight: 700; }
+.rd-cmp-legs li.both::before { content: "🤝 "; }
+.rd-cmp-legs li:not(.both)::before { content: "• "; color: var(--color-fg-muted); }
+.rd-cmp-none { color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); font-style: italic; }
+@media (max-width: 34rem) { .rd-cmp-pair.wide { grid-template-columns: 1fr; } }
+
 .rd-curbar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--cds-gap-sm) var(--cds-gap-md); margin: 0 0 var(--cds-gap-md); }
 .rd-curbar-k { font-size: 11px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--color-fg-muted); }
 .rd-curtog { display: inline-flex; flex-wrap: wrap; gap: 4px; padding: 4px; border-radius: 999px; background: var(--color-panel); border: 1px solid var(--color-border-line); }
@@ -348,7 +376,7 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
     <div class="rd-tug" data-source="summary" id="tug" aria-label="Measures led"></div>
   </header>
   <p class="rd-whose r">👤 Roscoe’s page</p>
-    <p class="rd-updated">Snapshot updated 17 Oct 2026 · Dom's Spurs v Coventry single added.</p>
+    <p class="rd-updated">Snapshot updated 17 Oct 2026 · Compare picks tab added.</p>
     <p class="rd-sub">Roscoe bets in euros, Dom in pounds, each with his own sportsbook. Every Premier League, Champions League and Nations League game, a weekly combo, a bet builder every round and five outrights each.</p>
   <div class="rd-curbar" id="curbar">
     <span class="rd-curbar-k">💱 Show money in</span>
@@ -392,10 +420,12 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
   <div class="rd-step">Who has uploaded <span class="rd-up-off" id="up-status-time" style="margin:0 0 0 6px;text-transform:none;letter-spacing:0;font-weight:400"></span></div>
   <table class="rd-stat" id="up-status" aria-label="Who has uploaded"><thead><tr><th>Upload</th><th>Roscoe</th><th>Dom</th><th></th></tr></thead><tbody></tbody></table>
   <div class="rd-gallery" id="up-gallery"></div>
+  <button type="button" class="rd-up-go" id="up-compare" style="margin-top:var(--cds-gap-md)">🆚 Compare our picks side by side</button>
 </section>
 
   <nav class="rd-tabs" role="tablist" aria-label="Views">
 <button type="button" role="tab" class="rd-tab" data-tab="overview" id="tab-overview" aria-selected="false">🏠 Overview</button>
+<button type="button" role="tab" class="rd-tab" data-tab="compare" id="tab-compare" aria-selected="false">🆚 Compare picks</button>
 <button type="button" role="tab" class="rd-tab" data-tab="trophies" id="tab-trophies" aria-selected="false">🏆 Trophies</button>
 <button type="button" role="tab" class="rd-tab" data-tab="outrights" id="tab-outrights" aria-selected="false">🔮 Outrights</button>
 <button type="button" role="tab" class="rd-tab" data-tab="builders" id="tab-builders" aria-selected="false">🏗️ Bet builders</button>
@@ -835,6 +865,13 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
         <thead><tr><th data-field="pos" data-fmt="int" class="num">#</th><th data-field="team">Team</th><th data-field="p" data-fmt="int" class="num">P</th><th data-field="w" data-fmt="int" class="num">W</th><th data-field="d" data-fmt="int" class="num">D</th><th data-field="l" data-fmt="int" class="num">L</th><th data-field="gd" data-fmt="signedint" class="num">GD</th><th data-field="pts" data-fmt="int" class="num">Pts</th><th data-field="roscoe_pos" data-fmt="int" class="num">Roscoe #</th><th data-field="roscoe_pts" data-fmt="int" class="num">Roscoe pts</th><th data-field="roscoe_move" data-fmt="move" class="num">vs real</th><th data-field="dom_pos" data-fmt="int" class="num">Dom #</th><th data-field="dom_pts" data-fmt="int" class="num">Dom pts</th><th data-field="dom_move" data-fmt="move" class="num">vs real</th></tr></thead>
         <tbody></tbody></table></div>
     </div>
+  </section>
+
+  <section class="rd-page" id="compare" hidden>
+    <h2 class="rd-h2">Compare picks</h2>
+    <p class="rd-blurb">Both sets of picks side by side, game by game, plus the combos and bet builders. Each league, combo or bet builder shows here as soon as you’ve both got bets in it; until then it stays 🔒 sealed.</p>
+    <div class="rd-filters"><label class="rd-muted" for="cmp-week">Week</label><select id="cmp-week"></select></div>
+    <div id="cmp-body" class="rd-cmp-sec"></div>
   </section>
 
   <section class="rd-page" id="bets" hidden>
@@ -2346,6 +2383,105 @@ dash.calc('builder_stats', {
     if (state.gamesWeek != null) sel.value = String(state.gamesWeek);
   }
 
+  // ---------- compare picks: both players' open bets side by side ----------
+  function drawCompare() {
+    const sel = document.getElementById('cmp-week'), body = document.getElementById('cmp-body');
+    if (!sel || !body) return;
+    const rows = rowsOf('settled');
+    const weeks = rowsOf('weeks').slice().sort((a, b) => a.week - b.week);
+    const wkRows = (wk) => rows.filter((r) => r.week === wk && r.type !== 'Outright');
+    const shown = weeks.filter((w) => wkRows(Number(w.week)).length);
+    if (state.cmpWeek == null || !shown.some((w) => Number(w.week) === state.cmpWeek)) {
+      const now = Date.now();
+      const live = shown.find((w) => wkRows(Number(w.week)).some((r) => !r.settled && (!r.kickoff || new Date(r.kickoff).getTime() > now - 3 * 864e5)));
+      state.cmpWeek = Number((live || shown.at(-1) || weeks[0] || { week: 1 }).week);
+    }
+    sel.replaceChildren(...(shown.length ? shown : weeks.slice(0, 1)).map((w) => new Option(`${w.label} · ${roundsOf(w)}`, w.week)));
+    sel.value = String(state.cmpWeek);
+    body.replaceChildren();
+    const el = (tag, cls, text) => { const x = document.createElement(tag); if (cls) x.className = cls; if (text != null) x.textContent = text; return x; };
+    const money = (r, v) => (r.cur === '£' ? '£' : '') + f2(v) + (r.cur === '€' ? '€' : '');
+    const stTxt = (r) => (r.status === 'won' ? '✓ won' : r.status === 'lost' ? '✗ lost' : r.status === 'void' ? 'void' : '');
+    const pickBox = (r, who, legsOther) => {
+      const box = el('div', 'rd-cmp-pick ' + (who === 'Roscoe' ? 'r' : 'd'));
+      box.append(el('span', 'rd-cmp-who', who));
+      if (!r) { box.append(el('span', 'rd-cmp-none', 'No bet')); return box; }
+      if (legsOther) {
+        const legs = String(r.selection || '').split(' + ').filter(Boolean);
+        box.append(el('span', 'rd-cmp-sel', `${legs.length}-fold @ ${f2(r.odds)}`));
+      } else {
+        box.append(el('span', 'rd-cmp-sel', r.selection || '–'));
+      }
+      const o = el('span', 'rd-cmp-odds', `${legsOther ? '' : '@ ' + f2(r.odds) + ' · '}${money(r, r.stake)} to win ${money(r, r.potential)}`);
+      const s = stTxt(r);
+      if (s) { o.append(' · '); o.append(el('span', 'rd-cmp-st ' + r.status, s)); }
+      box.append(o);
+      if (legsOther) {
+        const ul = el('ul', 'rd-cmp-legs');
+        for (const leg of String(r.selection || '').split(' + ').filter(Boolean)) ul.append(el('li', legsOther.includes(leg) ? 'both' : '', leg));
+        box.append(ul);
+      }
+      return box;
+    };
+    const list = wkRows(state.cmpWeek);
+    const NAME = { EPL: 'Premier League', UCL: 'Champions League', UNL: 'Nations League' };
+    let same = 0, games = 0;
+    const secs = [];
+    for (const comp of ['EPL', 'UCL', 'UNL']) {
+      const g = list.filter((r) => r.type === comp && r.fixture_id);
+      if (!g.length) continue;
+      const byFx = d3.group(g, (r) => r.fixture_id);
+      const sec = el('div', 'rd-cmp-sec');
+      sec.append(el('h3', '', `${NAME[comp]}`));
+      const fxs = [...byFx.values()].sort((a, b) => String(a[0].kickoff).localeCompare(String(b[0].kickoff)));
+      for (const pair of fxs) {
+        const R = pair.find((r) => r.player === 'Roscoe'), Dm = pair.find((r) => r.player === 'Dom'), any = R || Dm;
+        const card = el('div', 'rd-cmp-game');
+        const head = el('div', 'rd-cmp-head');
+        const t = el('div'); t.append(el('b', '', any.match));
+        t.append(el('small', '', '  ' + (any.score ? `FT ${any.score}` : any.kickoff ? kickFmt(new Date(any.kickoff)) : '')));
+        head.append(t);
+        if (R && Dm && R.pick && Dm.pick) {
+          games += 1;
+          const isSame = R.pick === Dm.pick; if (isSame) same += 1;
+          head.append(el('span', 'rd-cmp-badge ' + (isSame ? 'same' : 'split'), isSame ? '🤝 Same pick' : '⚔️ Split'));
+        }
+        const p = el('div', 'rd-cmp-pair');
+        p.append(pickBox(R, 'Roscoe'), pickBox(Dm, 'Dom'));
+        card.append(head, p);
+        sec.append(card);
+      }
+      secs.push(sec);
+    }
+    const multi = [['Combo', '🎰 Combo'], ['BB-EPL', '🏗️ Bet builder · Premier League'], ['BB-UCL', '🏗️ Bet builder · Champions League'], ['BB-UNL', '🏗️ Bet builder · Nations League']];
+    for (const [type, title] of multi) {
+      const g = list.filter((r) => r.type === type);
+      if (!g.length) continue;
+      const R = g.find((r) => r.player === 'Roscoe'), Dm = g.find((r) => r.player === 'Dom');
+      const legsOf = (r) => (r ? String(r.selection || '').split(' + ').filter(Boolean) : []);
+      const shared = legsOf(R).filter((l) => legsOf(Dm).includes(l)).length;
+      const sec = el('div', 'rd-cmp-sec');
+      const card = el('div', 'rd-cmp-game');
+      const head = el('div', 'rd-cmp-head');
+      const t = el('div'); t.append(el('b', '', title));
+      if (type !== 'Combo' && (R || Dm)) t.append(el('small', '', '  ' + ((R && R.match) || (Dm && Dm.match) || '')));
+      head.append(t, el('span', 'rd-cmp-badge ' + (shared ? 'same' : 'split'), shared ? `🤝 ${shared} leg${shared === 1 ? '' : 's'} in common` : '⚔️ No legs in common'));
+      const p = el('div', 'rd-cmp-pair wide');
+      p.append(pickBox(R, 'Roscoe', legsOf(Dm)), pickBox(Dm, 'Dom', legsOf(R)));
+      card.append(head, p);
+      sec.append(card);
+      secs.push(sec);
+    }
+    const w = weeks.find((x) => Number(x.week) === state.cmpWeek);
+    const sealed = rowsOf('sealed').filter((s) => w && String(s.label).startsWith(w.label + ' ·'));
+    const sum = el('div', 'rd-cmp-sum');
+    if (games) sum.append(el('span', '', `🤝 Same pick on ${same} of ${games} game${games === 1 ? '' : 's'}`), el('span', '', `⚔️ Split on ${games - same}`));
+    for (const s of sealed) sum.append(el('span', '', `🔒 ${s.label.replace(w.label + ' · ', '')}: waiting for ${s.waiting_for}`));
+    if (sum.childNodes.length) body.append(sum);
+    if (!secs.length) body.append(el('p', 'rd-cmp-none', 'Nothing to compare yet: each league shows here once you’ve both got bets in it.'));
+    body.append(...secs);
+  }
+
   function drawSection(sec) {
     fillMarks(sec);
     sec.querySelectorAll('table[data-source]').forEach((t) => {
@@ -2391,6 +2527,7 @@ dash.calc('builder_stats', {
       const k = el.dataset.chart;
       if (k === 'cum') drawCum(el); else if (k === 'bars') drawBars(el); else if (k === 'outcome') drawOutcome(el); else if (k === 'contra') drawContra(el);
     });
+    if (sec.id === 'compare') drawCompare();
     if (sec.id === 'outrights') drawOutrights(document.getElementById('outrights-viz'));
     if (sec.id === 'builders') drawBuilders(document.getElementById('builders-viz'));
     if (sec.id === 'picks') drawAgree(document.getElementById('agree-viz'));
@@ -2531,6 +2668,7 @@ dash.calc('builder_stats', {
   }
   tabs.forEach((t) => t.addEventListener('click', () => showTab(t.dataset.tab)));
 
+  document.getElementById('cmp-week').addEventListener('change', (e) => { state.cmpWeek = Number(e.target.value); drawAll(); });
   document.getElementById('games-week').addEventListener('change', (e) => { state.gamesWeek = Number(e.target.value); drawAll(); });
   const seg = (id, key) => {
     const box = document.getElementById(id);
@@ -2566,7 +2704,7 @@ dash.calc('builder_stats', {
 </script>
 <script>
 (() => {
-  const CFG = {"cloud": "u3p1wuu7", "preset": "rvd_slips", "mark_tag": "rvd-mark", "status": "https://res.cloudinary.com/u3p1wuu7/raw/upload/rvd/status.json", "marks": "https://res.cloudinary.com/u3p1wuu7/image/list/rvd-mark.json", "opened": "https://res.cloudinary.com/u3p1wuu7/image/list/rvd-open.json", "build": "20261017103728"};
+  const CFG = {"cloud": "u3p1wuu7", "preset": "rvd_slips", "mark_tag": "rvd-mark", "status": "https://res.cloudinary.com/u3p1wuu7/raw/upload/rvd/status.json", "marks": "https://res.cloudinary.com/u3p1wuu7/image/list/rvd-mark.json", "opened": "https://res.cloudinary.com/u3p1wuu7/image/list/rvd-open.json", "build": "20261017104305", "presence": [{"comp": "BB-EPL", "week": 1, "roscoe": 1, "dom": 0}, {"comp": "Combo", "week": 1, "roscoe": 1, "dom": 1}, {"comp": "EPL", "week": 1, "roscoe": 1, "dom": 1}, {"comp": "Outright", "week": null, "roscoe": 1, "dom": 0}]};
   const box = document.getElementById('upload'); if (!box) return;
   const $ = (id) => document.getElementById(id);
   const COMPS = [
@@ -2583,6 +2721,7 @@ dash.calc('builder_stats', {
   const drop = $('up-drop'), input = $('up-file'), thumbs = $('up-thumbs'), go = $('up-go'), msg = $('up-msg'), note = $('up-note');
   let player = null, comp = null, files = [], status = null;
   const ready = !!(CFG.cloud && CFG.preset);
+  { const cb = document.getElementById('up-compare'); if (cb) cb.addEventListener('click', () => { const t = document.getElementById('tab-compare'); if (t) { t.click(); t.scrollIntoView({ behavior: 'smooth', block: 'start' }); } }); }
   const chosenRound = {};  // comp -> week number picked in the round list
 
   // Refresh: reload this page past any cache, keeping where you were
@@ -2647,6 +2786,7 @@ dash.calc('builder_stats', {
     // slips the robot has unsealed (tagged rvd-open once both are in) — live list, newer than the status file
     const op = opened.filter((o) => keyOf(o.comp, o.week) === k);
     if (op.length > g.images.length) g.images = op;
+    for (const p of CFG.presence || []) if (keyOf(p.comp, p.week) === k) { if (p.roscoe) g.roscoe = Math.max(g.roscoe, 1); if (p.dom) g.dom = Math.max(g.dom, 1); }
     for (const m of marks.concat(mine)) if (keyOf(m.comp, m.week) === k) { if (m.player === 'Roscoe') g.roscoe = Math.max(g.roscoe, 1); if (m.player === 'Dom') g.dom = Math.max(g.dom, 1); }
     g.open = !!(g.roscoe && g.dom);
     return (g.roscoe || g.dom) ? g : null;
@@ -2670,8 +2810,10 @@ dash.calc('builder_stats', {
       tb.appendChild(tr);
       if (g && g.open && !g.images.length) {
         const p = document.createElement('p'); p.className = 'rd-up-off';
-        p.textContent = `🔓 ${label}: both in. The slips and picks appear here once they've been read and added.`;
-        gal.append(p);
+        p.textContent = `🔓 ${label}: both in. `;
+        const a = document.createElement('a'); a.href = '#compare'; a.textContent = 'See both sets of picks side by side →';
+        a.addEventListener('click', (e) => { const t = document.getElementById('tab-compare'); if (t) { e.preventDefault(); t.click(); t.scrollIntoView({ behavior: 'smooth', block: 'start' }); } });
+        p.append(a); gal.append(p);
       }
       if (g && g.open && g.images && g.images.length) {
         const h = document.createElement('h4'); h.textContent = `🔓 ${label} slips`;
