@@ -348,7 +348,7 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
     <div class="rd-tug" data-source="summary" id="tug" aria-label="Measures led"></div>
   </header>
   <p class="rd-whose r">👤 Roscoe’s page</p>
-    <p class="rd-updated">Snapshot updated 17 Oct 2026 · bet builders added.</p>
+    <p class="rd-updated">Snapshot updated 17 Oct 2026 · Roscoe's combo in.</p>
     <p class="rd-sub">Roscoe bets in euros, Dom in pounds, each with his own sportsbook. Every Premier League, Champions League and Nations League game, a weekly combo, a bet builder every round and five outrights each.</p>
   <div class="rd-curbar" id="curbar">
     <span class="rd-curbar-k">💱 Show money in</span>
@@ -946,7 +946,8 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
       const odds = n(b.odds), stake = n(b.stake);
       const settled = status !== 'pending';
       const given = n(b.returns);
-      const ret = given != null ? given : status === 'won' ? stake * odds : status === 'void' ? stake : 0;
+      // `returns` from the slip (e.g. an acca bonus) only counts once the bet has won or been voided
+      const ret = given != null && (status === 'won' || status === 'void') ? given : status === 'won' ? stake * odds : status === 'void' ? stake : 0;
       const week = Number(b.week);
       const toEurFixed = b.player === 'Dom' ? fixed : 1;
       const rate = live.get(week) ?? fixed;  // £1 in € for this week
@@ -968,7 +969,7 @@ html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); fon
         correct: pick && res ? pick === res : null,
         returns: settled ? r2(ret) : null,
         profit: settled ? r2(ret - stake) : 0,
-        potential: r2(stake * odds),
+        potential: r2(given != null ? given : stake * odds),
         staked: settled ? stake : 0,
         open_stake: settled ? 0 : stake,
         eur_fixed: toEurFixed, eur_live: toEurLive, gbp_fixed: toGbpFixed, gbp_live: toGbpLive, rate,
@@ -2565,7 +2566,7 @@ dash.calc('builder_stats', {
 </script>
 <script>
 (() => {
-  const CFG = {"cloud": "u3p1wuu7", "preset": "rvd_slips", "mark_tag": "rvd-mark", "status": "https://res.cloudinary.com/u3p1wuu7/raw/upload/rvd/status.json", "marks": "https://res.cloudinary.com/u3p1wuu7/image/list/rvd-mark.json", "opened": "https://res.cloudinary.com/u3p1wuu7/image/list/rvd-open.json", "build": "20261017004749"};
+  const CFG = {"cloud": "u3p1wuu7", "preset": "rvd_slips", "mark_tag": "rvd-mark", "status": "https://res.cloudinary.com/u3p1wuu7/raw/upload/rvd/status.json", "marks": "https://res.cloudinary.com/u3p1wuu7/image/list/rvd-mark.json", "opened": "https://res.cloudinary.com/u3p1wuu7/image/list/rvd-open.json", "build": "20261017005453"};
   const box = document.getElementById('upload'); if (!box) return;
   const $ = (id) => document.getElementById(id);
   const COMPS = [
